@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+remote_name="$1"
+remote_url="$2"
+
+echo "[pre-push] auditing outgoing refs for $remote_name ($remote_url)"
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  [[ -z "$local_sha" ]] && continue
+  "$repo_root/scripts/git-transfer-audit.sh" \
+    --mode push \
+    --old "$remote_sha" \
+    --new "$local_sha"
+done
