@@ -29,7 +29,7 @@ public class MenuCategoryController {
     @GetMapping("/restaurant/{restaurantId}")
     @Operation(summary = "List categories for a restaurant (ordered by display order)")
     @ApiResponse(responseCode = "200", description = "Categories returned")
-    public ResponseEntity<List<CategoryResponse>> findByRestaurant(@PathVariable Long restaurantId) {
+    public ResponseEntity<List<CategoryResponse>> findByRestaurant(@PathVariable("restaurantId") Long restaurantId) {
         return ResponseEntity.ok(categoryService.findByRestaurant(restaurantId));
     }
 
@@ -40,7 +40,7 @@ public class MenuCategoryController {
             @ApiResponse(responseCode = "404", description = "Category not found",
                     content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     })
-    public ResponseEntity<CategoryResponse> findById(@PathVariable Long id) {
+    public ResponseEntity<CategoryResponse> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(categoryService.findById(id));
     }
 
@@ -67,7 +67,7 @@ public class MenuCategoryController {
                     content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     })
     public ResponseEntity<CategoryResponse> update(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @Valid @RequestBody CategoryRequest request) {
         return ResponseEntity.ok(categoryService.update(id, request));
     }
@@ -79,7 +79,7 @@ public class MenuCategoryController {
             @ApiResponse(responseCode = "404", description = "Category not found",
                     content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
     })
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         categoryService.delete(id);
         return ResponseEntity.noContent().build();
     }

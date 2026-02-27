@@ -28,20 +28,20 @@ public class DishController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get dish by ID with full allergen breakdown")
-    public ResponseEntity<DishResponse> findById(@PathVariable Long id) {
+    public ResponseEntity<DishResponse> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(dishService.findById(id));
     }
 
     @GetMapping("/category/{categoryId}")
     @Operation(summary = "List dishes in a menu category")
-    public ResponseEntity<List<DishResponse>> findByCategory(@PathVariable Long categoryId) {
+    public ResponseEntity<List<DishResponse>> findByCategory(@PathVariable("categoryId") Long categoryId) {
         return ResponseEntity.ok(dishService.findByCategory(categoryId));
     }
 
     @GetMapping("/restaurant/{restaurantId}")
     @Operation(summary = "Paginated full menu for a restaurant")
     public ResponseEntity<Page<DishResponse>> findByRestaurant(
-            @PathVariable Long restaurantId,
+            @PathVariable("restaurantId") Long restaurantId,
             @PageableDefault(size = 20) Pageable pageable) {
         return ResponseEntity.ok(dishService.findByRestaurant(restaurantId, pageable));
     }
@@ -57,20 +57,20 @@ public class DishController {
     @GetMapping("/safe")
     @Operation(summary = "Find dishes safe for specific allergies (excludes dishes containing specified allergens)")
     public ResponseEntity<List<DishResponse>> findSafeDishes(
-            @RequestParam Long restaurantId,
-            @RequestParam Set<AllergenType> exclude) {
+            @RequestParam("restaurantId") Long restaurantId,
+            @RequestParam("exclude") Set<AllergenType> exclude) {
         return ResponseEntity.ok(dishService.findSafeDishes(restaurantId, exclude));
     }
 
     @GetMapping("/restaurant/{restaurantId}/vegetarian")
     @Operation(summary = "List vegetarian dishes for a restaurant")
-    public ResponseEntity<List<DishResponse>> findVegetarian(@PathVariable Long restaurantId) {
+    public ResponseEntity<List<DishResponse>> findVegetarian(@PathVariable("restaurantId") Long restaurantId) {
         return ResponseEntity.ok(dishService.findVegetarian(restaurantId));
     }
 
     @GetMapping("/restaurant/{restaurantId}/vegan")
     @Operation(summary = "List vegan dishes for a restaurant")
-    public ResponseEntity<List<DishResponse>> findVegan(@PathVariable Long restaurantId) {
+    public ResponseEntity<List<DishResponse>> findVegan(@PathVariable("restaurantId") Long restaurantId) {
         return ResponseEntity.ok(dishService.findVegan(restaurantId));
     }
 
@@ -83,20 +83,20 @@ public class DishController {
     @PutMapping("/{id}")
     @Operation(summary = "Update a dish and recompute allergens")
     public ResponseEntity<DishResponse> update(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @Valid @RequestBody DishRequest request) {
         return ResponseEntity.ok(dishService.update(id, request));
     }
 
     @PatchMapping("/{id}/toggle-availability")
     @Operation(summary = "Toggle dish availability (86'd / back on)")
-    public ResponseEntity<DishResponse> toggleAvailability(@PathVariable Long id) {
+    public ResponseEntity<DishResponse> toggleAvailability(@PathVariable("id") Long id) {
         return ResponseEntity.ok(dishService.toggleAvailability(id));
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a dish")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         dishService.delete(id);
         return ResponseEntity.noContent().build();
     }
