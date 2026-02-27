@@ -24,6 +24,14 @@ const currency = new Intl.NumberFormat('en-US', {
   currency: 'EUR'
 });
 
+function humanizeAllergen(allergen) {
+  return allergen
+    .toLowerCase()
+    .split('_')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+}
+
 export function App() {
   const [restaurants, setRestaurants] = useState([]);
   const [restaurantId, setRestaurantId] = useState('');
@@ -42,7 +50,7 @@ export function App() {
         const response = await fetch(`${API_BASE_URL}/api/v1/restaurants`);
 
         if (!response.ok) {
-          throw new Error('Failed to load restaurants. Is the API running on port 8080?');
+          throw new Error('Unable to load restaurants. Make sure the API is running on port 8080.');
         }
 
         const data = await response.json();
@@ -88,7 +96,7 @@ export function App() {
         const response = await fetch(safeDishUrl);
 
         if (!response.ok) {
-          throw new Error('Failed to load dishes. Check API data or URL.');
+          throw new Error('Unable to load dishes. Check the API URL and seeded data.');
         }
 
         const data = await response.json();
@@ -112,46 +120,76 @@ export function App() {
     );
   }
 
+  function clearAllergens() {
+    setSelectedAllergens([]);
+  }
+
   return (
     <main className="page">
-      <h1>SafeMenu Frontend Starter</h1>
-      <p className="subtitle">Explore safe dishes by excluding allergens in real time.</p>
+      <header className="hero">
+        <p className="eyebrow">SafeMenu</p>
+        <h1>Find dishes that fit your allergies in seconds</h1>
+        <p className="subtitle">
+          Pick a restaurant, exclude allergens, and instantly see dishes that are safe to order.
+        </p>
+      </header>
 
-      <section className="card">
-        <h2>Filters</h2>
+      <section className="card filter-card">
+        <div className="section-heading">
+          <h2>Filters</h2>
+          <span className="status-pill">
+            {selectedAllergens.length} allergen{selectedAllergens.length === 1 ? '' : 's'} excluded
+          </span>
+        </div>
 
         <label className="label" htmlFor="restaurant">
           Restaurant
         </label>
-        <select
-          id="restaurant"
-          value={restaurantId}
-          onChange={(event) => setRestaurantId(event.target.value)}
-          disabled={loadingRestaurants || restaurants.length === 0}
-        >
-          {restaurants.length === 0 ? (
-            <option value="">No restaurants found</option>
-          ) : (
-            restaurants.map((restaurant) => (
-              <option key={restaurant.id} value={restaurant.id}>
-                {restaurant.name}
-              </option>
-            ))
-          )}
-        </select>
+        <div className="select-wrap">
+          <select
+            id="restaurant"
+            value={restaurantId}
+            onChange={(event) => setRestaurantId(event.target.value)}
+            disabled={loadingRestaurants || restaurants.length === 0}
+          >
+            {restaurants.length === 0 ? (
+              <option value="">No restaurants found</option>
+            ) : (
+              restaurants.map((restaurant) => (
+                <option key={restaurant.id} value={restaurant.id}>
+                  {restaurant.name}
+                </option>
+              ))
+            )}
+          </select>
+          {loadingRestaurants ? <span className="hint">Loading restaurants…</span> : null}
+        </div>
 
-        <p className="label">Exclude allergens</p>
-        <div className="chips">
+        <div className="allergens-header">
+          <p className="label">Exclude allergens</p>
+          <button
+            className="link-button"
+            type="button"
+            onClick={clearAllergens}
+            disabled={selectedAllergens.length === 0}
+          >
+            Clear all
+          </button>
+        </div>
+
+        <div className="chips" role="list" aria-label="Allergen filters">
           {ALLERGENS.map((allergen) => {
             const selected = selectedAllergens.includes(allergen);
             return (
               <button
                 key={allergen}
                 type="button"
+                role="listitem"
                 className={selected ? 'chip chip--selected' : 'chip'}
                 onClick={() => toggleAllergen(allergen)}
+                aria-pressed={selected}
               >
-                {allergen}
+                {humanizeAllergen(allergen)}
               </button>
             );
           })}
@@ -159,22 +197,28 @@ export function App() {
       </section>
 
       <section className="card">
-        <h2>Safe dishes</h2>
+        <div className="section-heading">
+          <h2>Safe dishes</h2>
+          <span className="status-pill status-pill--soft">{dishes.length} result{dishes.length === 1 ? '' : 's'}</span>
+        </div>
+
         <p className="endpoint">GET {safeDishUrl || '/api/v1/dishes/safe?restaurantId={id}'}</p>
 
-        {loadingDishes ? <p>Loading dishes…</p> : null}
+        {loadingDishes ? <p className="info">Loading dishes…</p> : null}
         {error ? <p className="error">{error}</p> : null}
 
         {!loadingDishes && !error && dishes.length === 0 ? (
-          <p>No dishes match your filter.</p>
+          <p className="info">No dishes match your current filters. Try removing one or more allergens.</p>
         ) : null}
 
         <ul className="dish-list">
           {dishes.map((dish) => (
             <li key={dish.id} className="dish-item">
-              <strong>{dish.name}</strong>
-              <span>{currency.format(Number(dish.price ?? 0))}</span>
-              {dish.allergenWarning ? <small>{dish.allergenWarning}</small> : null}
+              <div>
+                <strong>{dish.name}</strong>
+                {dish.allergenWarning ? <small>{dish.allergenWarning}</small> : null}
+              </div>
+              <span className="price">{currency.format(Number(dish.price ?? 0))}</span>
             </li>
           ))}
         </ul>
