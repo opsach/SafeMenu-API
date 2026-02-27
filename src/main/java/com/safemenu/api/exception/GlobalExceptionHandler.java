@@ -4,6 +4,7 @@ import com.safemenu.api.dto.response.ApiErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -58,6 +59,21 @@ public class GlobalExceptionHandler {
                 .message("One or more fields have invalid values")
                 .path(request.getRequestURI())
                 .validationErrors(fieldErrors)
+                .build();
+
+        return ResponseEntity.badRequest().body(error);
+    }
+
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiErrorResponse> handleMalformedJson(
+            HttpMessageNotReadableException ex, HttpServletRequest request) {
+
+        ApiErrorResponse error = ApiErrorResponse.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error("Bad Request")
+                .message("Malformed JSON request body")
+                .path(request.getRequestURI())
                 .build();
 
         return ResponseEntity.badRequest().body(error);

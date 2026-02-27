@@ -103,6 +103,23 @@ class DishControllerIntegrationTest {
                 .andExpect(jsonPath("$.validationErrors.categoryId").exists());
     }
 
+
+    @Test
+    @DisplayName("POST /api/v1/dishes — malformed JSON returns 400 instead of 500")
+    void shouldReturn400ForMalformedJson() throws Exception {
+        String malformedJson = """
+                # Create a dish with butter (MILK) and flour (CEREALS_WITH_GLUTEN)
+                curl -X POST http://localhost:8080/api/v1/dishes
+                """;
+
+        mockMvc.perform(post("/api/v1/dishes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(malformedJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Bad Request"))
+                .andExpect(jsonPath("$.message").value("Malformed JSON request body"));
+    }
+
     @Test
     @DisplayName("GET /api/v1/dishes/999 — returns 404 for non-existent dish")
     void shouldReturn404ForMissingDish() throws Exception {
