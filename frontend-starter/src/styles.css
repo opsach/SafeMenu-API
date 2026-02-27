@@ -1,0 +1,95 @@
+:root {
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  color: #12131a;
+  background: #f6f8fc;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.page {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+}
+
+h1 {
+  margin-bottom: 0.4rem;
+}
+
+.subtitle {
+  margin-top: 0;
+  color: #4f5a70;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #dde3f0;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+select {
+  width: 100%;
+  max-width: 360px;
+  padding: 0.55rem;
+  border-radius: 8px;
+  border: 1px solid #cfd7e6;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  border: 1px solid #cfd7e6;
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  background: #fff;
+  cursor: pointer;
+}
+
+.chip--selected {
+  color: white;
+  background: #2e63ff;
+  border-color: #2e63ff;
+}
+
+.endpoint {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
+  background: #f3f6fb;
+  border-radius: 8px;
+  padding: 0.6rem;
+  overflow: auto;
+}
+
+.dish-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dish-item {
+  border-top: 1px solid #eceff6;
+  padding: 0.8rem 0;
+  display: grid;
+  gap: 0.2rem;
+}
+
+.error {
+  color: #b00020;
+}

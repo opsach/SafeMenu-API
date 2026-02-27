@@ -82,6 +82,21 @@ Starts with H2 database and demo data — zero config needed.
 
 ---
 
+
+## 🖥️ Frontend Starter (React)
+
+Want a quick UI to experience the API in a browser?
+
+```bash
+cd frontend-starter
+npm install
+npm run dev
+```
+
+Open `http://localhost:5173` while the API is running on `http://localhost:8080`.
+
+---
+
 ## 📡 API Endpoints
 
 ### Restaurants
