@@ -29,7 +29,7 @@ public class RestaurantController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get restaurant by ID")
-    public ResponseEntity<RestaurantResponse> findById(@PathVariable Long id) {
+    public ResponseEntity<RestaurantResponse> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(restaurantService.findById(id));
     }
 
@@ -42,14 +42,14 @@ public class RestaurantController {
     @PutMapping("/{id}")
     @Operation(summary = "Update an existing restaurant")
     public ResponseEntity<RestaurantResponse> update(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @Valid @RequestBody RestaurantRequest request) {
         return ResponseEntity.ok(restaurantService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a restaurant and all its menus")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         restaurantService.delete(id);
         return ResponseEntity.noContent().build();
     }

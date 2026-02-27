@@ -29,7 +29,7 @@ public class IngredientController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get ingredient by ID")
-    public ResponseEntity<IngredientResponse> findById(@PathVariable Long id) {
+    public ResponseEntity<IngredientResponse> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(ingredientService.findById(id));
     }
 
@@ -48,14 +48,14 @@ public class IngredientController {
     @PutMapping("/{id}")
     @Operation(summary = "Update an ingredient")
     public ResponseEntity<IngredientResponse> update(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @Valid @RequestBody IngredientRequest request) {
         return ResponseEntity.ok(ingredientService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete an ingredient")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         ingredientService.delete(id);
         return ResponseEntity.noContent().build();
     }
