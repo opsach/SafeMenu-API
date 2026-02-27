@@ -83,6 +83,18 @@ Starts with H2 database and demo data — zero config needed.
 ---
 
 
+## ⚠️ Java 25 Runtime Warnings
+
+If you run the API with Java 25, you may see startup warnings from dependencies (for example Lombok `sun.misc.Unsafe` warnings during compilation or Tomcat native-access warnings at runtime).
+
+- The project is officially targeted to **Java 21** (`<java.version>21</java.version>`).
+- `spring-boot:run` is configured with `--enable-native-access=ALL-UNNAMED` to remove Tomcat's native-access warning on newer JDKs.
+- Lombok's `Unsafe` warning is dependency-internal and does **not** block build or runtime.
+
+For the cleanest local output and fully aligned tooling behavior, use Java 21.
+
+---
+
 ## 🖥️ Frontend Starter (React)
 
 Want a quick UI to experience the API in a browser?
