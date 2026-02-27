@@ -27,7 +27,7 @@ public class OpenApiConfig {
                         .version("1.0.0")
                         .contact(new Contact()
                                 .name("SafeMenu")
-                                .url("https://github.com/yourusername/safemenu-api"))
+                                .url("https://github.com/opsach/SafeMenu-API"))
                         .license(new License()
                                 .name("MIT")
                                 .url("https://opensource.org/licenses/MIT")));
