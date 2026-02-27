@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+before_ref="ORIG_HEAD"
+after_ref="HEAD"
+
+if git rev-parse --verify "$before_ref" >/dev/null 2>&1; then
+  "$repo_root/scripts/git-transfer-audit.sh" \
+    --mode pull \
+    --old "$before_ref" \
+    --new "$after_ref"
+else
+  echo "[post-merge] skipped: ORIG_HEAD unavailable"
+fi

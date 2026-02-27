@@ -159,6 +159,33 @@ Response:
 
 ---
 
+
+## 🔐 Git Pull/Push Audit Hooks
+
+This repo includes a transfer-audit script that can be wired into Git hooks to inspect changed files whenever you pull or push.
+
+### Install hooks locally
+
+```bash
+git config core.hooksPath .githooks
+```
+
+### What gets audited
+
+- Possible secrets/API keys/private keys
+- Suspicious file names like `.env` and `id_rsa`
+- Large files (default limit: 512KB)
+- Binary-like artifacts (`.exe`, `.dll`, `.jar`, `.p12`, etc.)
+- Potential hard-coded credentials in config files
+- Destructive command patterns in `.sql` and `.sh` files (warning)
+
+### Run manually
+
+```bash
+scripts/git-transfer-audit.sh --mode push --old <old-ref> --new <new-ref>
+scripts/git-transfer-audit.sh --mode pull --old <old-ref> --new <new-ref>
+```
+
 ## 🇪🇺 Supported Allergens (EU-14)
 
 | Allergen | Examples |
