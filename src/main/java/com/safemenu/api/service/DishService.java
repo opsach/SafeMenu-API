@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -56,7 +57,7 @@ public class DishService {
      * Example: GET /api/v1/dishes/safe?restaurantId=1&exclude=MILK,NUTS
      * → returns all dishes at that restaurant that contain neither milk nor nuts.
      */
-    @Cacheable(value = "safeDishes", key = "#restaurantId + '-' + #excludedAllergens")
+    @Cacheable(value = "safeDishes", key = "T(com.safemenu.api.service.DishService).buildSafeDishCacheKey(#restaurantId, #excludedAllergens)")
     public List<DishResponse> findSafeDishes(Long restaurantId, Set<AllergenType> excludedAllergens) {
         return dishRepository.findSafeDishes(restaurantId, excludedAllergens).stream()
                 .map(mapper::toDishResponse)
@@ -98,6 +99,7 @@ public class DishService {
     @CacheEvict(value = {"restaurantMenus", "safeDishes"}, allEntries = true)
     public DishResponse update(Long id, DishRequest request) {
         Dish dish = getEntityById(id);
+        MenuCategory category = categoryService.getEntityById(request.getCategoryId());
         Set<Ingredient> ingredients = ingredientService.getEntitiesByIds(request.getIngredientIds());
 
         dish.setName(request.getName());
@@ -105,6 +107,7 @@ public class DishService {
         dish.setPrice(request.getPrice());
         dish.setVegetarian(request.isVegetarian());
         dish.setVegan(request.isVegan());
+        dish.setCategory(category);
         dish.setIngredients(ingredients);
 
         return mapper.toDishResponse(dishRepository.save(dish));
@@ -128,5 +131,13 @@ public class DishService {
     private Dish getEntityById(Long id) {
         return dishRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Dish", id));
+    }
+
+    public static String buildSafeDishCacheKey(Long restaurantId, Set<AllergenType> excludedAllergens) {
+        String allergensKey = excludedAllergens == null ? "" : excludedAllergens.stream()
+                .map(Enum::name)
+                .sorted()
+                .collect(Collectors.joining(","));
+        return restaurantId + "-" + allergensKey;
     }
 }
