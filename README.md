@@ -6,7 +6,7 @@ A Spring Boot REST API for managing restaurant menus with **automatic EU-14 alle
 
 Built to demonstrate real-world API design with **domain-driven business logic**, not just CRUD.
 
-[![CI](https://github.com/yourusername/safemenu-api/actions/workflows/ci.yml/badge.svg)](https://github.com/yourusername/safemenu-api/actions/workflows/ci.yml)
+[![CI](https://github.com/opsach/SafeMenu-API/actions/workflows/ci.yml/badge.svg)](https://github.com/opsach/SafeMenu-API/actions/workflows/ci.yml)
 
 ---
 
