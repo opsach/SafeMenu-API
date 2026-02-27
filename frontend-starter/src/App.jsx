@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080';
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '');
 
 const ALLERGENS = [
   'CELERY',
@@ -40,6 +40,7 @@ export function App() {
   const [loadingRestaurants, setLoadingRestaurants] = useState(false);
   const [loadingDishes, setLoadingDishes] = useState(false);
   const [error, setError] = useState('');
+  const restaurantsUrl = API_BASE_URL ? `${API_BASE_URL}/api/v1/restaurants` : '/api/v1/restaurants';
 
   useEffect(() => {
     async function fetchRestaurants() {
@@ -47,10 +48,10 @@ export function App() {
       setError('');
 
       try {
-        const response = await fetch(`${API_BASE_URL}/api/v1/restaurants`);
+        const response = await fetch(restaurantsUrl);
 
         if (!response.ok) {
-          throw new Error('Unable to load restaurants. Make sure the API is running on port 8080.');
+          throw new Error('Unable to load restaurants. Make sure the API is running and reachable.');
         }
 
         const data = await response.json();
@@ -67,7 +68,7 @@ export function App() {
     }
 
     fetchRestaurants();
-  }, []);
+  }, [restaurantsUrl]);
 
   const safeDishUrl = useMemo(() => {
     if (!restaurantId) {
@@ -80,7 +81,8 @@ export function App() {
       params.set('exclude', selectedAllergens.join(','));
     }
 
-    return `${API_BASE_URL}/api/v1/dishes/safe?${params.toString()}`;
+    const endpoint = `/api/v1/dishes/safe?${params.toString()}`;
+    return API_BASE_URL ? `${API_BASE_URL}${endpoint}` : endpoint;
   }, [restaurantId, selectedAllergens]);
 
   useEffect(() => {
@@ -96,7 +98,7 @@ export function App() {
         const response = await fetch(safeDishUrl);
 
         if (!response.ok) {
-          throw new Error('Unable to load dishes. Check the API URL and seeded data.');
+          throw new Error('Unable to load dishes. Check API connectivity and seeded data.');
         }
 
         const data = await response.json();

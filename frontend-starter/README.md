@@ -19,10 +19,15 @@ npm run dev
 Open: `http://localhost:5173`
 
 > Keep the API running on `http://localhost:8080`.
+>
+> By default, the app now uses the Vite dev proxy (`/api` -> `http://localhost:8080`) to avoid browser CORS issues.
 
 ## Configure API URL
 
-Copy `.env.example` to `.env` and change `VITE_API_BASE_URL` if needed.
+Copy `.env.example` to `.env` only if you want to override the default proxy behavior.
+
+- Leave `VITE_API_BASE_URL` empty (recommended for local dev with Vite proxy).
+- Set `VITE_API_BASE_URL` (for deployed API URLs).
 
 ```bash
 cp .env.example .env
